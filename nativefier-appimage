@@ -1,0 +1,58 @@
+#!/bin/bash
+
+SCRIPTPATH="$(
+  cd "$(dirname "$0")" >/dev/null 2>&1
+  pwd -P
+)"
+
+###
+# Arg 1 : Command
+# Arg 2 : Install script
+###
+print_cmd_error() {
+  printf "Command not found : $1\n"
+  printf "Run this command to install : $2\n"
+
+  exit 1
+}
+
+if ! command -v nativefier &>/dev/null; then
+  print_cmd_error nativefier "npm i -g nativefier"
+fi
+
+if ! command -v electron-builder &>/dev/null; then
+  print_cmd_error "electron-builder" "npm i -g electron-builder"
+fi
+
+HELPTEXT="Usage :
+  $0 <name> <url> -- [extra nativefier options]
+
+  <name> : Name of the application
+  <url>  : Url of the webpage to package"
+
+if [ -z "$1" -o -z "$2" ]; then
+  printf "$HELPTEXT\n"
+  exit 1
+fi
+
+name="$1"
+url="$2"
+
+shift
+shift
+shift
+
+(
+  if [ -d "$name.AppDir" ]; then
+    printf "ERROR : \`$name.AppDir\` directory already exists\n"
+    exit 1
+  fi
+
+  nativefier -n "$name" -p linux "$url" $@
+  mv "$name"-linux-* "$name.AppDir"
+  cd "$name".AppDir/resources/app/
+  rm icon.*
+
+  electron-builder --linux appimage
+  mv dist/*.AppImage ../../../$name.AppImage
+)
