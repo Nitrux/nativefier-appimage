@@ -16,7 +16,7 @@ print_cmd_error() {
   exit 1
 }
 
-if ! command -v npx1 &>/dev/null; then
+if ! command -v npx &>/dev/null; then
   print_cmd_error "npx"
 fi
 
