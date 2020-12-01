@@ -43,12 +43,28 @@ shift
     printf "ERROR : \`$name.AppDir\` directory already exists\n"
     exit 1
   fi
-
+  
   npx nativefier -n "$name" -p linux "$url" $@
   mv "$name"-linux-* "$name.AppDir"
-  cd "$name".AppDir/resources/app/
-  rm icon.*
-
-  npx electron-builder --linux appimage
-  mv dist/*.AppImage ../../../$name.AppImage
+  cd "$name".AppDir/
+  
+  cp resources/app/icon.* ./
+  
+  echo "[Desktop Entry]" > $name.desktop
+  echo "Name=$name" >> $name.desktop
+  echo "Exec=AppRun %U" >> $name.desktop
+  echo "Terminal=false" >> $name.desktop
+  echo "Type=Application" >> $name.desktop
+  echo "Icon=icon" >> $name.desktop
+  echo "X-AppImage-Version=1.0.0" >> $name.desktop
+  echo "Categories=Utility;" >> $name.desktop
+  
+  echo "#!/bin/bash" > AppRun
+  echo "exec \$APPDIR/$name" >> AppRun
+  chmod +x ./AppRun
 )
+
+[ ! -e /tmp/appimagetool ] && wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
+chmod +x /tmp/appimagetool
+
+/tmp/appimagetool "$name.AppDir"
