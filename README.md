@@ -19,7 +19,6 @@ nativefier-appimage pine64 https://pine64.com -- --min-width 1500 --min-height 1
 
 # Requirements
 - npm.
-- nativefier.
 
 # Issues
 If you find problems with the contents of this repository please create an issue.
