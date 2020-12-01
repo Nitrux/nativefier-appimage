@@ -12,8 +12,10 @@ Usage :
 
 # Examples
 
-`nativefier-appimage Nitrux https://nxos.org`
-`nativefier-appimage pine64 https://pine64.com -- --min-width 1500 --min-height 1000`
+```
+nativefier-appimage Nitrux https://nxos.org
+nativefier-appimage pine64 https://pine64.com -- --min-width 1500 --min-height 1000
+```
 
 # Requirements
 - npm.
