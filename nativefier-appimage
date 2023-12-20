@@ -129,6 +129,7 @@ done
 command -v npx >/dev/null 2>&1 || print_error "npx command not found. Please install it."
 command -v wget >/dev/null 2>&1 || print_error "wget command not found. Please install it."
 
+
 # -- Function to download or copy icon.
 
 process_icon() {
@@ -146,6 +147,7 @@ process_icon() {
     print_error "Invalid icon URL/path. Please provide a valid HTTP link or a local path."
   fi
 }
+
 
 # -- Function to create desktop entry and AppRun script.
 
@@ -170,6 +172,7 @@ create_desktop_entry() {
   } > AppRun
   chmod +x ./AppRun
 }
+
 
 # -- Check for existing AppDir and create AppImage.
 
@@ -202,6 +205,7 @@ create_appimage() {
 
   /tmp/appimagetool "$app_name.AppDir" || print_error "Failed to create AppImage."
 }
+
 
 # -- Main execution.
 
