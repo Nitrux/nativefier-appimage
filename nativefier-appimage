@@ -177,12 +177,12 @@ create_appimage() {
   local app_name="$1"
   local app_url="$2"
   local icon_path="$3"
-  local extra_opts="$4"
+  local extra_nativefier_opts="$4"
 
   if [ -d "$app_name.AppDir" ]; then
     echo "WARNING: \`$app_name.AppDir\` directory already exists. Re-using AppDir."
   else
-    npx nativefier -n "$app_name" -p linux "$app_url" "$extra_opts" || print_error "Failed to create AppDir with nativefier."
+    npx nativefier -n "$app_name" -p linux "$app_url" "${extra_nativefier_opts[@]}" || print_error "Failed to create AppDir with nativefier."
     mv "$app_name"-linux-* "$app_name.AppDir" || print_error "Failed to move AppDir."
   fi
 
