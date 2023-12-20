@@ -45,7 +45,7 @@ EOF
 # -- Function to print version.
 
 show_version() {
-  echo "AppImage Creator Script version 1.0"
+  echo "nativefier-appimage version 1.0"
 }
 
 
@@ -54,6 +54,34 @@ show_version() {
 print_error() {
   echo "Error: $1" >&2
   exit 1
+}
+
+
+# -- URL and Path validation Ffunction.
+
+validate_url() {
+  local url="$1"
+  if ! [[ $url =~ ^https?://[a-zA-Z0-9./?=_-]+$ ]]; then
+    print_error "Invalid URL: $url"
+  fi
+}
+
+validate_path() {
+  local path="$1"
+  if ! [ -e "$path" ]; then
+    print_error "Invalid path: $path"
+  fi
+}
+
+
+# -- User Confirmation for Ooverwriting.
+confirm_overwrite() {
+  local dir="$1"
+  read -p "Directory $dir already exists. Overwrite? [y/N] " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    print_error "User aborted the operation."
+  fi
 }
 
 
@@ -183,7 +211,8 @@ create_appimage() {
   local extra_nativefier_opts="$4"
 
   if [ -d "$app_name.AppDir" ]; then
-    echo "WARNING: \`$app_name.AppDir\` directory already exists. Re-using AppDir."
+    echo "WARNING: \`$app_name.AppDir\` directory already exists."
+    confirm_overwrite "$app_name.AppDir"
   else
     npx nativefier -n "$app_name" -p linux "$app_url" "${extra_nativefier_opts[@]}" || print_error "Failed to create AppDir with nativefier."
     mv "$app_name"-linux-* "$app_name.AppDir" || print_error "Failed to move AppDir."
@@ -193,8 +222,6 @@ create_appimage() {
 
   process_icon "$icon_path"
   create_desktop_entry "$app_name" "$(basename "$icon_path" | cut -d '?' -f 1)"
-
-  # -- Download appimagetool if not exists.
 
   if [ ! -e /tmp/appimagetool ]; then
     echo "Downloading appimagetool..."
