@@ -73,19 +73,6 @@ validate_path() {
   fi
 }
 
-# -- User Confirmation for overwriting.
-
-confirm_overwrite() {
-  local dir="$1"
-  read -p "Directory $dir already exists. Overwrite? [y/N] " -n 1 -r
-  echo
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    rm -rf "$dir"
-  else
-    print_error "User aborted the operation."
-  fi
-}
-
 
 # -- Default values.
 
@@ -216,8 +203,8 @@ create_appimage() {
   local extra_nativefier_opts="$4"
 
   if [ -d "$app_name.AppDir" ]; then
-    echo "WARNING: \`$app_name.AppDir\` directory already exists."
-    confirm_overwrite "$app_name.AppDir"
+    echo "WARNING: \`$app_name.AppDir\` directory already exists. Deleting it."
+    rm -rf "$app_name.AppDir" || print_error "Failed to remove existing AppDir."
   fi
 
   npx nativefier -n "$app_name" -p linux "$app_url" "$extra_nativefier_opts" || print_error "Failed to create AppDir with nativefier."
