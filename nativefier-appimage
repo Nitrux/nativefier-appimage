@@ -215,6 +215,8 @@ create_appimage() {
   process_icon "$icon_path"
   create_desktop_entry "$app_name" "$(basename "$icon_path" | cut -d '?' -f 1)"
 
+  cd -
+
   if [ ! -e /tmp/appimagetool ]; then
     echo "Downloading appimagetool..."
     wget -O /tmp/appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" \
@@ -222,7 +224,7 @@ create_appimage() {
     chmod +x /tmp/appimagetool
   fi
 
-  /tmp/appimagetool "$PWD/*.AppDir" || print_error "Failed to create AppImage."
+  /tmp/appimagetool "$app_name.AppDir" || print_error "Failed to create AppImage."
 
   echo "Removing temporary AppDir..."
   cd .. || print_error "Failed to change directory for AppDir removal."
