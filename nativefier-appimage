@@ -93,6 +93,9 @@ extra_nativefier_opts=""
 # -- Parse arguments.
 
 while :; do
+  if [ -z "${1:-}" ]; then
+    break
+  fi
   case $1 in
     -h|--help)
       show_help
