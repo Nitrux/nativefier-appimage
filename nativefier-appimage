@@ -45,7 +45,7 @@ EOF
 # -- Function to print version.
 
 show_version() {
-  echo "nativefier-appimage version 1.1"
+  echo "nativefier-appimage version 1.2"
 }
 
 
@@ -74,9 +74,9 @@ validate_path() {
 }
 
 
-# -- Default values.
+# -- Additional options for Nativefier.
 
-extra_nativefier_opts=""
+extra_nativefier_opts="--enable-es3-apis --ignore-gpu-blacklist"
 
 
 # -- Parse arguments.
@@ -178,7 +178,7 @@ create_desktop_entry() {
   {
     echo "[Desktop Entry]"
     echo "Name=$app_name"
-    echo "Exec=AppRun %U"
+    echo "Exec=AppRun %U $extra_nativefier_opts"
     echo "Terminal=false"
     echo "Type=Application"
     echo "Icon=${icon_name%.*}"
@@ -188,7 +188,7 @@ create_desktop_entry() {
 
   {
     echo "#!/bin/bash"
-    echo "exec \$APPDIR/$app_name"
+    echo "exec \"\$APPDIR/$app_name\""
   } > AppRun
   chmod +x ./AppRun
 }
@@ -205,6 +205,7 @@ create_appimage() {
   if [ -d "$app_name.AppDir" ]; then
     echo "WARNING: \`$app_name.AppDir\` directory already exists. Deleting it."
     rm -rf "$app_name.AppDir" || print_error "Failed to remove existing AppDir."
+    rm -rf "$app_name-$(uname --machine).AppImage" || print_error "Failed to remove existing AppImage."
   fi
 
   npx nativefier -n "$app_name" -p linux "$app_url" "$extra_nativefier_opts" || print_error "Failed to create AppDir with nativefier."
@@ -214,6 +215,8 @@ create_appimage() {
 
   process_icon "$icon_path"
   create_desktop_entry "$app_name" "$(basename "$icon_path" | cut -d '?' -f 1)"
+
+  cp "$(basename "$icon_path" | cut -d '?' -f 1)" "resources/app/icon.png" || print_error "Failed to replace icon.png"
 
   cd -
 
