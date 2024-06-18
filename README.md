@@ -1,24 +1,25 @@
 # nativefier-appimage
 
- A tool to generate AppImages of a website using nativefier.
+ A tool to generate AppImages of a website using [Nativefier](https://github.com/jiahaog/nativefier).
  
 ```
 Usage :
-    nativefier-appimage <name> <url> -- [extra nativefier options]
+    nativefier-appimage -- name <name>  --url <url> --icon <icon-file>
 
-    <name> : Name of the application
-    <url>  : Url of the webpage to package
+    <name> : Name of the application.
+    <url>  : Url of the webpage to package.
+    <icon> : Path to the icon file.
 ```
 
 # Examples
 
 ```
-nativefier-appimage Nitrux https://nxos.org
-nativefier-appimage pine64 https://pine64.com -- --min-width 1500 --min-height 1000
+nativefier-appimage --name Nitrux --url https://nxos.org --icon nx-logo.png
 ```
 
 # Requirements
 - npm.
+- FUSE.
 
 # Issues
 If you find problems with the contents of this repository please create an issue.
