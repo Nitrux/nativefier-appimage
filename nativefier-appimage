@@ -222,7 +222,7 @@ create_appimage() {
     chmod +x /tmp/appimagetool
   fi
 
-  /tmp/appimagetool "$PWD/$app_name.AppDir" || print_error "Failed to create AppImage."
+  /tmp/appimagetool "$PWD/*.AppDir" || print_error "Failed to create AppImage."
 
   echo "Removing temporary AppDir..."
   cd .. || print_error "Failed to change directory for AppDir removal."
